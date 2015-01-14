@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Testes - EasyForm</title>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" type="text/css" href="bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="bootstrap-responsive.css">
+
+		<style type="text/css">
+
+		br {clear: both !important;}
+
+		.ef-mg-right { margin-right: 20px; }
+
+		.ef-error { float: left; }
+		.ef-dica { display: block; }
+
+		.ef-form {}
+
+		.ef-fieldset {}
+		.ef-legend-fieldset {}
+
+		.ef-label-campo {}
+
+		.ef-input-nome {}
+		.ef-input-email {}
+		.ef-select-estados {}
+		.ef-select-niveis {}
+
+		.ef-btn-submit  { margin-top: 25px; }
+
+		</style>
+
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+	    <!--[if lt IE 9]>
+	      <script src="../assets/js/html5shiv.js"></script>
+	    <![endif]-->
+
+		<script type="text/javascript" src="jquery-1.11.2.min.js"></script>
+
+	</head>
+
+	<body>
+
+		<div id="integration_form"></div>
+
+		<!-- JavaScript's -->
+		<script type="text/javascript" src="jquery.easyform.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$('#integration_form').easyform({
+				token      : '62bb61431348e22850828a5829c4373faafe29c1',
+				secret     : '51a266c2844ccd5cac83d88de88d82d05358aa51',
+				title      : 'Formulário',
+				fields : {
+					estado : ['PR', 'SC', 'RS'],
+					nivel  : ['Iniciante', 'Intermediário', 'Avançado', 'Ninja']
+				}
+			});
+		});
+		</script>
+
+	</body>
+
+</html>
