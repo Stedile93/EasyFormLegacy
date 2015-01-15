@@ -18,6 +18,7 @@ Author: Giuliano Stedile
 			'secret'     : '',     // Secret obrigatório.
 			'lang'       : 'pt',   // Determina o idioma do plugin (en, pt) Defaults = en
 			'modal'      : false,  // Fetermina se o formulário será modal ou inserido em outro elemento
+			'nameButtonModal' : 'Press to open form',   // Se 'modal' for 'true', nameButtonModel determina o nome do botão
 			'urlRequest' : 'http://linkderecebimento.com.br',   // URL obrigatória que receberá a requisição POST retornando HTTP 200 para sucesso e HTTP 500 para erro
 
 			'title'      : 'Form',
@@ -67,6 +68,8 @@ Author: Giuliano Stedile
 		}
 
 
+
+
 		return this.each(function(){
 
 			if( !settings.token || settings.token == '' ){
@@ -74,20 +77,22 @@ Author: Giuliano Stedile
 				return false;
 			}
 			if( !settings.secret || settings.secret == '' ){
-				$(this).html('<div class="ef-error">Error ef-0001: Secret unspecified.</div>');
+				$(this).html('<div class="alert alert-error ef-error clearfix">Error ef-0002: Secret unspecified.</div>');
 				return false;
 			}
 			if( !settings.urlRequest || settings.urlRequest == '' ){
-				$(this).html('<div class="ef-error">Error ef-0001: urlRequest unspecified.</div>');
+				$(this).html('<div class="alert alert-error ef-error clearfix">Error ef-0003: urlRequest unspecified.</div>');
 				return false;
 			}
 
-			if( !settings.token || settings.token == '' ){
-				$(this).html('<div class="ef-error">Error ef-0001: Token not specificated.</div>');
-				return false;
-			}
+			if( settings.modal == true ){
 
-			$(this).html(initLayout());
+				$('#integration_form').replaceWith( '<a href="#ef-modal" id="integration_form" role="button" class="btn btn-primary" data-toggle="modal">'+settings.nameButtonModal+'</a> <div id="ef-modal" class="modal hide fade"> <div class="modal-header"> &nbsp; <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div> <div class="modal-body">'+initLayout()+'</div> </div>' );
+
+				
+			}else{
+				$(this).html(initLayout());
+			}
 
 		});
 
@@ -120,7 +125,7 @@ Author: Giuliano Stedile
 				contentLayout += '</select> </div>';
 			}
 
-			contentLayout += '<button type="submit" class="btn pull-right ef-btn-submit clearfix">'+lang.nBtnSubmit+'</button> <br> <span class="help-block ef-dica">* Campos obrigatórios.</span> </div>';
+			contentLayout += '<button type="submit" class="btn btn-success pull-right ef-btn-submit clearfix">'+lang.nBtnSubmit+'</button> <br> <span class="help-block ef-dica">* Campos obrigatórios.</span> </div>';
 
 
 			contentLayout += '</fieldset> </form>';
@@ -128,19 +133,6 @@ Author: Giuliano Stedile
 			return contentLayout;
 
 		}
-
-		/*<form>
-  <fieldset>
-    <legend>Legend</legend>
-    <label>Label name</label>
-    <input type="text" placeholder="Type something…">
-    <span class="help-block">Example block-level help text here.</span>
-    <label class="checkbox">
-      <input type="checkbox"> Check me out
-    </label>
-    <button type="submit" class="btn">Submit</button>
-  </fieldset>
-</form>*/
 
 	};
 
