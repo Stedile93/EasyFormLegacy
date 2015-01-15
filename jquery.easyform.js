@@ -19,7 +19,7 @@ Author: Giuliano Stedile
 			'lang'       : 'pt',   // Determina o idioma do plugin (en, pt) Defaults = en
 			'modal'      : false,  // Fetermina se o formulário será modal ou inserido em outro elemento
 			'nameButtonModal' : 'Press to open form',   // Se 'modal' for 'true', nameButtonModel determina o nome do botão
-			'urlRequest' : 'http://linkderecebimento.com.br',   // URL obrigatória que receberá a requisição POST retornando HTTP 200 para sucesso e HTTP 500 para erro
+			'urlRequest' : 'http://teste.com.br',   // URL obrigatória que receberá a requisição POST retornando HTTP 200 para sucesso e HTTP 500 para erro
 
 			'title'      : 'Form',
 
@@ -46,6 +46,11 @@ Author: Giuliano Stedile
 
 				lang.nBtnSubmit = 'Submit';
 				lang.nBtnSubmitLoading = 'Sending...';
+
+				lang.txtSuccess = 'Form submitted successfully!';
+				lang.txtError500 = 'Failed to send form! Error HTTP 500';
+				lang.txtOtherError = 'Failed to send form! Other HTTP error';
+
 				lang.txtDica = '* Required fields.';
 				break;
 
@@ -65,6 +70,11 @@ Author: Giuliano Stedile
 
 				lang.nBtnSubmit = 'Enviar';
 				lang.nBtnSubmitLoading = 'Enviando...';
+
+				lang.txtSuccess = 'Formulário enviado con sucesso!';
+				lang.txtError500 = 'Falha ao enviar formulário! Erro HTTP 500';
+				lang.txtOtherError = 'Falha ao enviar formulário! Outro erro HTTP';
+
 				lang.txtDica = '* Campos obrigatórios.';
 				break;
 		}
@@ -75,22 +85,46 @@ Author: Giuliano Stedile
 		return this.each(function(){
 
 			if( !settings.token || settings.token == '' ){
-				$(this).html('<div class="alert alert-error ef-error clearfix">Error ef-0001: Token unspecified.</div>');
+				$(this).html('<div class="alert alert-danger alert-dismissible" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ef-0001: Token unspecified.</div>');
 				return false;
 			}
 			if( !settings.secret || settings.secret == '' ){
-				$(this).html('<div class="alert alert-error ef-error clearfix">Error ef-0002: Secret unspecified.</div>');
+				$(this).html('<div class="alert alert-danger alert-dismissible" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ef-0002: Secret unspecified.</div>');
 				return false;
 			}
 			if( !settings.urlRequest || settings.urlRequest == '' ){
-				$(this).html('<div class="alert alert-error ef-error clearfix">Error ef-0003: urlRequest unspecified.</div>');
+				$(this).html('<div class="alert alert-danger alert-dismissible" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error ef-0003: urlRequest unspecified.</div>');
 				return false;
 			}
 
 			if( settings.modal == true ){
 
-				$('#integration_form').replaceWith( '<a href="#ef-modal" id="integration_form" role="button" class="btn btn-primary" data-toggle="modal">'+settings.nameButtonModal+'</a> <div class="modal fade" id="ef-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <h4 class="modal-title" id="myModalLabel">&nbsp;</h4> </div> <div class="modal-body">'+initLayout()+'</div> </div> </div> </div>' );
+				$('#integration_form').replaceWith( '<a href="#ef-modal" id="integration_form" role="button" class="btn btn-primary" data-toggle="modal">'+settings.nameButtonModal+'</a> <div class="modal fade" id="ef-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <h4 class="modal-title" id="myModalLabel">'+settings.title+'</h4> </div> <div class="modal-body">'+initLayout()+'</div> </div> </div> </div>' );
 
+				$('#ef-modal').on('show.bs.modal', function (event) {
+					var modal = $(this);
+
+					var form = $('form#formulario-ef', modal);
+
+					$('legend', form).remove();
+
+					form.submit(function(e){
+
+						e.preventDefault();
+
+						if(validationForm(form)){
+							
+							$('button[type="submit"]', form).html(lang.nBtnSubmitLoading).attr('disabled', true);
+
+							if(httlRequest(form)){
+								$('button[type="submit"]', form).html(lang.nBtnSubmit).removeAttr('disabled');
+							}
+
+						}
+
+					});
+
+				});
 				
 			}else{
 				$(this).html(initLayout());
@@ -106,8 +140,7 @@ Author: Giuliano Stedile
 						$('button[type="submit"]', form).html(lang.nBtnSubmitLoading).attr('disabled', true);
 
 						if(httlRequest(form)){
-
-							
+							$('button[type="submit"]', form).html(lang.nBtnSubmit).removeAttr('disabled');
 						}
 
 					}
@@ -144,37 +177,33 @@ Author: Giuliano Stedile
 				}
 			};
 
-			try{
-				var http = new XMLHttpRequest();
-			}catch(err){
-				var http = new ActiveXObject('Microsoft.XMLHTTP');
-			}
+			$.ajax({
+				type        : 'POST',
+				url         : settings.urlRequest,
+				data        : valuesRequest,
+				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
 
-			http.onreadystatechange = function(){
-				if(this.readyState == 4){ //Requisição concluída
-					if(this.status == 200){
-						// sucesso
-						
-						//alert bootstrap
+				success : function(response){
+					console.log("HTTP Status 200: Sucesso!");
 
-						form.get(0).reset();
-					}else if(this.status == 500){
-						// erro interno
+					form.get(0).reset();
+
+					$('.ef-alertas', form).html('<div class="alert alert-success alert-dismissible" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> '+lang.txtSuccess+' </div>');
+				},
+
+				error : function(jqXHR, textStatus, errorThrown) {
+					if(jqXHR.status == 500){
+						console.log("HTTP Status 500: Erro!");
+
+						$('.ef-alertas', form).html('<div class="alert alert-danger alert-dismissible" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> '+lang.txtError500+' </div>');
 					}else{
-						// outro erro
+						console.log("HTTP Status "+jqXHR.status+": Outro erro!");
+
+						$('.ef-alertas', form).html('<div class="alert alert-danger alert-dismissible" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> '+lang.txtOtherError+' </div>');
 					}
-				}else{
-					// falha na requisição
 				}
 
-				$('button[type="submit"]', form).html(lang.nBtnSubmit).removeAttr('disabled');
-			}
-			http.open('POST', settings.urlRequest, true);
-			http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			http.send('nome=Manoel&idade=50');
-
-			console.log(valuesRequest);
-			console.log(JSON.stringify(valuesRequest));
+			});
 			return true;
 
 		}
@@ -238,7 +267,7 @@ Author: Giuliano Stedile
 			contentLayout += '</div> <div class="form-group"> <span id="helpBlock" class="help-block ef-dica">'+lang.txtDica+'</span> </div>';
 
 
-			contentLayout += '</fieldset> </form>';
+			contentLayout += '</fieldset> <div class="ef-alertas"></div> </form>';
 
 			return contentLayout;
 
