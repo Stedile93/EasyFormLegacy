@@ -125,7 +125,7 @@ Author: Giuliano Stedile
 				contentLayout += '</select> </div>';
 			}
 
-			contentLayout += '<button type="submit" class="btn btn-success pull-right ef-btn-submit clearfix">'+lang.nBtnSubmit+'</button> <br> <span class="help-block ef-dica">* Campos obrigatórios.</span> </div>';
+			contentLayout += '<button type="submit" class="btn btn-success pull-right ef-btn-submit clearfix">'+lang.nBtnSubmit+'</button> <br> <span class="help-block ef-dica">'+lang.txtDica+'</span> </div>';
 
 
 			contentLayout += '</fieldset> </form>';
