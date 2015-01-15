@@ -56,7 +56,7 @@ Author: Giuliano Stedile
 				lang.titleCampoEmail = 'E-mail:';
 				lang.phCampoEmail = 'Ex.: antonio@hotmail.com';
 
-				lang.titleSelectEstado = 'Estado (UF):';
+				lang.titleSelectEstado = 'Estado:';
 
 				lang.titleSelectNivel = 'Nível:';
 
@@ -87,7 +87,7 @@ Author: Giuliano Stedile
 
 			if( settings.modal == true ){
 
-				$('#integration_form').replaceWith( '<a href="#ef-modal" id="integration_form" role="button" class="btn btn-primary" data-toggle="modal">'+settings.nameButtonModal+'</a> <div id="ef-modal" class="modal hide fade"> <div class="modal-header"> &nbsp; <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div> <div class="modal-body">'+initLayout()+'</div> </div>' );
+				$('#integration_form').replaceWith( '<a href="#ef-modal" id="integration_form" role="button" class="btn btn-primary" data-toggle="modal">'+settings.nameButtonModal+'</a> <div class="modal fade" id="ef-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <h4 class="modal-title" id="myModalLabel">&nbsp;</h4> </div> <div class="modal-body">'+initLayout()+'</div> </div> </div> </div>' );
 
 				
 			}else{
@@ -103,12 +103,14 @@ Author: Giuliano Stedile
 			contentLayout += '<legend class="ef-legend-fieldset">'+settings.title+'</legend>';
 
 
-			contentLayout += '<div class="pull-left clearfix"> <div class="controls"> <label class="ef-label-campo">'+lang.titleCampoNome+' *</label> <input class="span5 ef-input-nome" type="text" name="nome" placeholder="'+lang.phCampoNome+'"> </div>';
+			contentLayout += '<div class="form-group"> <label class="ef-label-campo" for="ef-inputNome">'+lang.titleCampoNome+' *</label> <input id="ef-inputNome" class="form-control ef-input-nome" type="text" name="nome" placeholder="'+lang.phCampoNome+'" required autofocus> </div>';
 
-			contentLayout += '<div class="controls"> <label class="ef-label-campo">'+lang.titleCampoEmail+' *</label> <input class="span5 ef-input-email" type="email" name="email" placeholder="'+lang.phCampoEmail+'"> </div>';
+			contentLayout += '<div class="form-group"> <label class="ef-label-campo" for="ef-inputEmail">'+lang.titleCampoEmail+' *</label> <input id="ef-inputEmail" class="form-control ef-input-email" type="email" name="email" placeholder="'+lang.phCampoEmail+'" required > </div>';
+
+			contentLayout += '<div class="row">';
 
 			if( settings.fields.estado || settings.fields.estado != '' ){
-				contentLayout += '<div class="controls pull-left ef-mg-right"> <label class="ef-label-campo" for="ef-selectStates">'+lang.titleSelectEstado+'</label> <select class="span2 ef-select-estados" id="ef-selectStates">';
+				contentLayout += '<div class="col-xs-3"> <label class="ef-label-campo" for="ef-selectStates">'+lang.titleSelectEstado+'</label> <select class="form-control ef-select-estados" id="ef-selectStates">';
 					var estados = settings.fields.estado;
 					for (var i in estados){
 						contentLayout += '<option value="'+estados[i]+'">'+estados[i]+'</option>';
@@ -117,7 +119,7 @@ Author: Giuliano Stedile
 			}
 
 			if( settings.fields.nivel || settings.fields.nivel != '' ){
-				contentLayout += '<div class="controls pull-left"> <label class="ef-label-campo" for="ef-selectLevels">'+lang.titleSelectNivel+'</label> <select class="span2 ef-select-niveis" id="ef-selectLevels">';
+				contentLayout += '<div class="col-xs-4"> <label class="ef-label-campo" for="ef-selectLevels">'+lang.titleSelectNivel+'</label> <select class="form-control ef-select-niveis" id="ef-selectLevels">';
 					var niveis = settings.fields.nivel;
 					for (var i in niveis){
 						contentLayout += '<option value="'+niveis[i]+'">'+niveis[i]+'</option>';
@@ -125,7 +127,9 @@ Author: Giuliano Stedile
 				contentLayout += '</select> </div>';
 			}
 
-			contentLayout += '<button type="submit" class="btn btn-success pull-right ef-btn-submit clearfix">'+lang.nBtnSubmit+'</button> <br> <span class="help-block ef-dica">'+lang.txtDica+'</span> </div>';
+			contentLayout += '<div class="col-xs-3 pull-right"> <button type="submit" class="btn btn-success pull-right ef-btn-submit clearfix">'+lang.nBtnSubmit+'</button>  </div>';
+
+			contentLayout += '</div> <div class="form-group"> <span id="helpBlock" class="help-block ef-dica">'+lang.txtDica+'</span> </div>';
 
 
 			contentLayout += '</fieldset> </form>';
