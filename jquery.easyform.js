@@ -45,6 +45,7 @@ Author: Giuliano Stedile
 				lang.titleSelectNivel = 'Level:';
 
 				lang.nBtnSubmit = 'Submit';
+				lang.nBtnSubmitLoading = 'Sending...';
 				lang.txtDica = '* Required fields.';
 				break;
 
@@ -63,6 +64,7 @@ Author: Giuliano Stedile
 				lang.nCampoNome = 'Name:';
 
 				lang.nBtnSubmit = 'Enviar';
+				lang.nBtnSubmitLoading = 'Enviando...';
 				lang.txtDica = '* Campos obrigatórios.';
 				break;
 		}
@@ -92,25 +94,129 @@ Author: Giuliano Stedile
 				
 			}else{
 				$(this).html(initLayout());
+
+				var form = $('form#formulario-ef');
+
+				form.submit(function(e){
+
+					e.preventDefault();
+
+					if(validationForm(form)){
+						
+						$('button[type="submit"]', form).html(lang.nBtnSubmitLoading).attr('disabled', true);
+
+						if(httlRequest(form)){
+
+							
+						}
+
+					}
+
+				});
 			}
 
 		});
 
+	
+		function httlRequest(form){
+
+			if($('select[name="estado"]', form).length){
+				var estado = $('select[name="estado"]', form).val()
+			}else{
+				var estado = '';
+			}
+
+			if($('select[name="nivel"]', form).length){
+				var nivel = $('select[name="nivel"]', form).val()
+			}else{
+				var nivel = '';
+			}
+
+			var valuesRequest = {
+				token : settings.token,
+				secret : settings.secret,
+
+				lead : {
+					name : $('input[name="nome"]', form).val(),
+					email : $('input[name="email"]', form).val(),
+					estado : estado,
+					nivel : nivel
+				}
+			};
+
+			try{
+				var http = new XMLHttpRequest();
+			}catch(err){
+				var http = new ActiveXObject('Microsoft.XMLHTTP');
+			}
+
+			http.onreadystatechange = function(){
+				if(this.readyState == 4){ //Requisição concluída
+					if(this.status == 200){
+						// sucesso
+						
+						//alert bootstrap
+
+						form.get(0).reset();
+					}else if(this.status == 500){
+						// erro interno
+					}else{
+						// outro erro
+					}
+				}else{
+					// falha na requisição
+				}
+
+				$('button[type="submit"]', form).html(lang.nBtnSubmit).removeAttr('disabled');
+			}
+			http.open('POST', settings.urlRequest, true);
+			http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			http.send('nome=Manoel&idade=50');
+
+			console.log(valuesRequest);
+			console.log(JSON.stringify(valuesRequest));
+			return true;
+
+		}
+
+
+		function validationForm(form){
+
+			$('input[name="nome"], input[name="email"]', form).parent().removeClass('has-error');
+
+			var nome = $('input[name="nome"]', form).val();
+			if(nome == ''){
+				$('input[name="nome"]', form).parent().addClass('has-error');
+				$('input[name="nome"]', form).focus();
+				return false;
+			}
+
+			var email = $('input[name="email"]', form).val();
+			if(email == '' || !checkMail(email)){
+				$('input[name="email"]', form).parent().addClass('has-error');
+				$('input[name="email"]', form).focus();
+				return false;
+			}
+
+			return true;
+
+		}
+
 		function initLayout(){
 
-			var contentLayout = '<form class="ef-form"> <fieldset class="ef-fieldset">';
+			var contentLayout = '<form class="ef-form" id="formulario-ef"> <fieldset class="ef-fieldset">';
 
 			contentLayout += '<legend class="ef-legend-fieldset">'+settings.title+'</legend>';
 
 
-			contentLayout += '<div class="form-group"> <label class="ef-label-campo" for="ef-inputNome">'+lang.titleCampoNome+' *</label> <input id="ef-inputNome" class="form-control ef-input-nome" type="text" name="nome" placeholder="'+lang.phCampoNome+'" required autofocus> </div>';
+			contentLayout += '<div class="form-group"> <label class="ef-label-campo" for="ef-inputNome">'+lang.titleCampoNome+' *</label> <input id="ef-inputNome" class="form-control ef-input-nome" type="text" name="nome" placeholder="'+lang.phCampoNome+'" autofocus> </div>';
 
-			contentLayout += '<div class="form-group"> <label class="ef-label-campo" for="ef-inputEmail">'+lang.titleCampoEmail+' *</label> <input id="ef-inputEmail" class="form-control ef-input-email" type="email" name="email" placeholder="'+lang.phCampoEmail+'" required > </div>';
+			contentLayout += '<div class="form-group"> <label class="ef-label-campo" for="ef-inputEmail">'+lang.titleCampoEmail+' *</label> <input id="ef-inputEmail" class="form-control ef-input-email" type="email" name="email" placeholder="'+lang.phCampoEmail+'"> </div>';
 
 			contentLayout += '<div class="row">';
 
 			if( settings.fields.estado || settings.fields.estado != '' ){
-				contentLayout += '<div class="col-xs-3"> <label class="ef-label-campo" for="ef-selectStates">'+lang.titleSelectEstado+'</label> <select class="form-control ef-select-estados" id="ef-selectStates">';
+				contentLayout += '<div class="col-xs-3"> <label class="ef-label-campo" for="ef-selectStates">'+lang.titleSelectEstado+'</label> <select class="form-control ef-select-estados" id="ef-selectStates" name="estado">';
 					var estados = settings.fields.estado;
 					for (var i in estados){
 						contentLayout += '<option value="'+estados[i]+'">'+estados[i]+'</option>';
@@ -119,7 +225,7 @@ Author: Giuliano Stedile
 			}
 
 			if( settings.fields.nivel || settings.fields.nivel != '' ){
-				contentLayout += '<div class="col-xs-4"> <label class="ef-label-campo" for="ef-selectLevels">'+lang.titleSelectNivel+'</label> <select class="form-control ef-select-niveis" id="ef-selectLevels">';
+				contentLayout += '<div class="col-xs-4"> <label class="ef-label-campo" for="ef-selectLevels">'+lang.titleSelectNivel+'</label> <select class="form-control ef-select-niveis" id="ef-selectLevels" name="nivel">';
 					var niveis = settings.fields.nivel;
 					for (var i in niveis){
 						contentLayout += '<option value="'+niveis[i]+'">'+niveis[i]+'</option>';
@@ -136,6 +242,19 @@ Author: Giuliano Stedile
 
 			return contentLayout;
 
+		}
+
+		function checkMail(mail){
+			var er = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+			if(typeof(mail) == "string"){
+				if(er.test(mail)){ return true; }
+			}else if(typeof(mail) == "object"){
+				if(er.test(mail.value)){ 
+					return true; 
+				}
+			}else{
+				return false;
+			}
 		}
 
 	};
