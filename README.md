@@ -63,6 +63,36 @@ First, you must include jQuery, because the plugin is based on it. After that, w
 ...
 ```
 
+#### Step 4: Styling (easyform.css)
+
+```html
+
+
+.ef-error { float: left; }
+.ef-dica { display: block; }
+
+.ef-form { margin-bottom: 0; }
+
+.ef-fieldset {}
+.ef-legend-fieldset {}
+
+.ef-label-campo {}
+
+.ef-input-nome {}
+.ef-input-email {}
+.ef-select-estados {}
+.ef-select-niveis {}
+
+.ef-btn-submit  { margin-top: 25px; }
+
+
+/* --------------- Your Custom CSS --------------- */
+
+/* ... */
+
+
+```
+
 ### Configuration options
 
 #### General
