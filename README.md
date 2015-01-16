@@ -65,7 +65,7 @@ First, you must include jQuery, because the plugin is based on it. After that, w
 
 #### Step 4: Styling (easyform.css)
 
-```html
+```css
 
 
 .ef-error { float: left; }
