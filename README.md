@@ -62,3 +62,70 @@ First, you must include jQuery, becouse the plugin is based on it. After that, w
 
 ...
 ```
+
+### Configuration options
+
+#### General
+
+**token**
+Token Hash for HTTP Request
+```
+default: ''
+options: string
+```
+
+**secret**
+Secret Hash for HTTP Request
+```
+default: ''
+options: string
+```
+
+**urlRequest**
+URL that will get the data of the form
+```
+default: ''
+options: string
+```
+
+**title**
+Title of form
+```
+default: 'Form'
+options: string
+```
+
+**fields.estado**
+Determines the select options
+```
+default: ''
+options: array
+```
+
+**fields.nivel**
+Determines the select options
+```
+default: ''
+options: array
+```
+
+**lang**
+Determines the lang of plugin
+```
+default: pt
+options: pt, en
+```
+
+**modal**
+Determines if the form is on page ou in modal
+```
+default: false
+options: boolean (true / false)
+```
+
+**nameButtonModal**
+Determines the name of modal button
+```
+default: 'Press to open form'
+options: string
+```
