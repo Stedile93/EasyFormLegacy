@@ -1,6 +1,6 @@
 # EasyForm
 
-easyform provides a easier way to create contact forms.
+EasyForm provides a easier way to create contact forms.
 
 
 ## Installation
@@ -96,14 +96,14 @@ options: string
 ```
 
 **fields.estado**
-Determines the select options
+Determines the select options. Ex.: ['PR', 'SC', 'RS']
 ```
 default: ''
 options: array
 ```
 
 **fields.nivel**
-Determines the select options
+Determines the select options. Ex.: ['Beginner', 'Intermediate', 'Advanced', 'Ninja']
 ```
 default: ''
 options: array
@@ -129,3 +129,6 @@ Determines the name of modal button
 default: 'Press to open form'
 options: string
 ```
+
+
+Thanks for read!
