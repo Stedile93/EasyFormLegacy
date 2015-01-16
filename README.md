@@ -1,13 +1,13 @@
 # EasyForm
 
-EasyForm provides a easier way to create contact forms.
+EasyForm is a jQuery plugin that provides an easier way to create contact forms.
 
 
 ## Installation
 
 #### Step 1: Required files
 
-First, you must include jQuery, becouse the plugin is based on it. After that, we must include CSS and JS from Bootstrap v3.3.1. And finally, include the plugin EasyForm.
+First, you must include jQuery, because the plugin is based on it. After that, we must include CSS and JS from Bootstrap v3.3.1. And finally, include the plugin EasyForm.
 
 ```html
 <!-- jQuery -->
